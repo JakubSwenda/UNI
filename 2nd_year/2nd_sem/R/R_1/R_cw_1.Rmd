@@ -1,0 +1,154 @@
+---
+title: "R1_cwiczenia_czesc_1"
+author: "Klaudia Chmielewska"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+
+## Ćwiczenie 1
+
+## Otwórz dodatkowy plik "R1_cw1.pdf". Przedstaw sposób zapisu tych wyrażeń matematycznych w linijce kodu. Weź pod uwagę, że w pewnychprzypadkach możesz potrzebować funkcji!
+
+``` {r exercise1}
+
+
+ex2_1<-10
+ex2_2<-2
+
+wynik1<-(ex2_1)/(ex2_2)
+print(wynik1)
+
+wynik2<-sqrt(ex2_1-ex2_2)/2
+print(wynik2)
+
+
+wynik3<-(ex2_1+10)/ex2_2
+print(wynik3)
+
+
+```
+
+
+## Ćwiczenie 2
+
+## Test MTT pozwala określić toksyczność danego związku wobec komórek ludzkich w hodowli in vitro. Badacze chcą przeanalizować związek o potencjalnym działaniu przeciwnowotworowym. Wybrano 4 różne stężenia związku i dodano je do hodowli komórek nowotworu piersi, a następnie po 2 dniach inkubacji wykonano test MTT, aby przeanalizować jak wiele komórek zostało zabitych. MTT zmienia się w formazan, a pomiar absorbancji pozwala określić procent komórek żywych w poszczególnych próbach/dołkach na płytce hodowlanej.
+
+## Procent żywych komórek nowotworowych po inkubacji:
+## 10uM: 30, 35, 33
+## 100uM: 49, 41, 43
+## 200uM: 52, 48, 46
+## 400uM: 65, 58, 63
+
+## 2.1 Stwórz zmienne zawierające procent żywych komórek nowotworowych po inkubacji z konkretnym stężeniem związku. Policz średni % dla każdego związku za pomocą funkcji. Stwórz nową zmienną 'antynow_zwiazki, która będzie zawierała 4 dane - średnie % dla poszczególnych związków.
+
+## 2.2 Napisz wyrażenie, które przeanalizuje zmienne pod kątem jego prawdziwości - wyrażenie pozwalające sprawdzić który związek zabija średnio MNIEJ niż 50% komórek. Jest to proste wyrażenie, które pozwala nam określić które stężenie jest najbardziej zbliżone do tzw. IC50, czyli stężenia związku wywołującego śmierć co najmniej 50% komórek. Im więcej zabitych komórek, tym większy potencjał przeciwko nowotworom (przy założeniu, że to samo stężenie związku nie wpływa negatywnie na komórki zdrowe!)
+
+
+## 2.3 Podaj kolejne 2 wyrażenia z odpowiedzią Tak/Nie (True/False), które pozwolą pokazać w konsoli wartości z 'antynow_zwiazki':
+## - większe niż 53% LUB (!) niższe niż 35%
+## - większe niż 51% I (!) niższe niż 35%
+
+
+## 2.4 Zaokrągl wartości dla stężeń do liczby DZIESIĄTEK (nie części dziesiętnych! Czyli jeśli 23 - zaokrągl do 20)
+
+``` {r ex2}
+#2.1
+zw1<-c(30,35,33)
+zw2<-c(49,41,43)
+zw3<-c(52,48,46)
+zw4<-c(65,58,63)
+
+sr1<-mean(zw1)
+sr2<-mean(zw2)
+sr3<-mean(zw3)
+sr4<-mean(zw4)
+
+antynow_zwiazki<-c(sr1,sr2,sr3,sr4)
+
+#2.2
+(antynow_zwiazki<50)
+
+#2.3
+(antynow_zwiazki>53 | antynow_zwiazki<35)
+(antynow_zwiazki>51 & antynow_zwiazki<35)
+
+#2.4
+signif(zw1,1)
+signif(zw2,1)
+signif(zw3,1)
+signif(zw4,1)
+
+```
+
+
+
+## Ćwiczenie 3
+
+## Grupa biologów chciała przeanalizować czas reakcji oraz preferencje żywieniowe myszy pod wpływem bodźca zapachowego pochodzącego z sera gouda i brie. 
+
+## W tym celu, umieszczali kolejno zwierzęta na środku półotwartej cylindrycznej tuby, na której końcach znajdywały się sery brie (na lewo) i gouda (na prawo). Po 10 sekundach badacze wyjmowali myszy z tuby i mierzyli odległość, jaką przebyły zwierzęta w konkretnym kierunku.
+
+## Dla ułatwienia spisywania wyników:
+### - brie (w lewo) = (-) # wartości ujemne
+### - gouda (w prawo) = (+) # wartości dodatnie
+
+### Dla przykładu mysz, która przebyła 5cm w lewo (brie) = -5
+
+## 3.1 Stwórz zmienną 'myszy_cm' i dodaj do niej wartości dla myszy, które ruszyły :
+## - w lewo (brie) : 3.5cm, 2cm, 6cm, 7.5cm
+## - w prawo (gouda): 3cm, 1.5cm, 7cm
+
+## 3.2 Wyznacz jaki dystans został pokonany finalnie przez wszystkie myszy "razem wzięte".
+
+## 3.3 Określ z użyciem funkcji jak wiele myszy uczestniczyło w badaniu, przy założeniu, że każda mysz była brana do eksperymentu tylko raz.
+
+## 3.4 Jaki jest najdłuższy pokonany dystans, niezależnie od kierunku? (użyj funkcji, która daje wartości absolutne, tzn. takie, które nie są ujemne)
+
+## 3.5 Niezależnie od kierunku, jaki jest średni pokonany dystans?
+
+## 3.6 Znajdź najkrótszy i najdłuższy dystans, niezależnie od kierunku.
+
+## 3.7 Jeden z eksperymentatorów zapomniał wpisać ostatniego pomiaru do dokumentacji. Zapisał jednak wartość i prosi o dopisanie jej do zbioru: gouda, 4cm. Jaka będzie to wartość w naszym zbiorze? Dodaj nową wartość na koniec zbioru z użyciem funkcji.
+
+## 3.8 Wyciągnij ze zbioru wartość uzyskaną dla piątej myszy (5 wartość w zbiorze). Czy ta mysz podróżowała w stronę brie czy gouda?
+
+## 3.9 Używając odpowiedniej komendy, wyciągnij ze zbioru do konsoli, podaj ze zbioru tylko dane dla myszy, które podróżowały w stronę serka brie.
+
+## 3.10 Podaj za pomocą wyrażenia, dane ze zbioru dla myszy, które przeszły dystans MAKSYMALNIE 3cm.
+
+``` {r ex3}
+#3.1
+myszy_cm<-c(-3.5,-2,-6,-7.5,3,1.5,7)
+
+#3.2
+dystans<-sum(abs(myszy_cm))
+
+#3.3
+ile_myszy<-length(myszy_cm)
+
+#3.4
+max_dystans<-max(abs(myszy_cm))
+
+#3.5
+sr_dystans<-mean(abs(myszy_cm))
+  
+#3.6
+min_i_max<-c(max(abs(myszy_cm)),min(abs(myszy_cm)))
+
+#3.7
+myszy_cm_nowe<-append(myszy_cm,4)
+  
+#3.8
+mysz_nr_5<-myszy_cm_nowe[c(5)]
+
+
+#3.9
+brie<-myszy_cm_nowe[myszy_cm_nowe<0]
+
+#3.10
+krotkodystansowcy<-myszy_cm_nowe[abs(myszy_cm_nowe)<=3]
+
+```
+

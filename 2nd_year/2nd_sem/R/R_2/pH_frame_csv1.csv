@@ -1,0 +1,9 @@
+"","Number of substance","Substances","Real pH","Is the substance acidic?","Is the substance basic?","Hydronium Ion Concentration","Total Volume to expand from 100ml if pH to reach 7","Volume of water to add or evaporate"
+"Substance 1",1,"sea water",8,FALSE,TRUE,1e-08,10,-90
+"Substance 2",2,"soap",10,FALSE,TRUE,1e-10,0.1,-99.9
+"Substance 3",3,"Ca(OH)2",12,FALSE,TRUE,1e-12,0.001,-99.999
+"Substance 4",4,"coffee",5,TRUE,FALSE,1e-05,10000,9900
+"Substance 5",5,"beer",4,TRUE,FALSE,1e-04,1e+05,99900
+"Substance 6",6,"wine",4,TRUE,FALSE,1e-04,1e+05,99900
+"Substance 7",7,"baking soda",9,FALSE,TRUE,1e-09,1,-99
+"Substance 8",8,"blood",8,FALSE,TRUE,1e-08,10,-90

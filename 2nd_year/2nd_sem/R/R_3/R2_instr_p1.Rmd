@@ -1,0 +1,391 @@
+---
+title: "Elementy języka R, cz. 2;' Klaudia Chmielewska Uni of Gdansk"
+author: "Klaudia Chmielewska"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+## Pliki csv
+
+```{r 1}
+# Duże zestawy danych są często przedstawiane w formie tabel w plikach z rozszerzeniem .csv lub .tsv
+# W instrukcji do poprzednich zadań mogłeś/aś zauważyć funkcję "write.csv", pozwalającej zachować data frame w formie pliku .csv
+# csv = comma separated values (wartości podzielone przecinkami)
+# Aby zapisać plik .csv w formie zmiennej, musimy użyć funkcji "read.csv" 
+# Spróbujmy wywołać plik stworzony w zeszłym tygodniu:
+
+dat <- read.csv("pH_frame_csv.csv", header = TRUE, sep = ",", dec = ".") 
+
+# Zauważ, że mamy dodatkowy warunek w funkcji : "header". Jeśli jego wartość to "TRUE" to pierwszy wiersz (row) w pliku będzie traktowany jak zbiór etykiet dla poszczególnych kolumn - czyli jako opis nazw zmiennych lub po prostu nazwy kolumn.
+
+# Innymi warunkami mogą być:
+
+## sep = "znak", np. sep = ";" (oznaczenie co jest separatorem danych, w przypadku plików csv jest to domyślnie przecinek, w naszym przykładzie jest to średnik)
+
+## dec = "znak", np. dec = "." (co jest separatorem dziesiętnym? Tzn co dzieli liczby całkowite od niecałkowitych? W podanym przykładzie jest to kropka, czyli forma zapisu wartości liczbowych to np. "25.10") !! : W polskich danych separatorem jest zazwyczaj przecinek, a nie kropka.
+
+## row.names = 1, oznacza, że stworzona zostanie dodatkowa kolumna z oznaczeniem rzędów jako pierwsza kolumna. 
+
+## col.names oznacza możliwość podania nazw wszystkich kolumn po przecinku (należy pamiętać o odpowiedniej ilości nazw!)
+
+
+##Spróbuj przywołać do wektora "z5" plik csv stworzony na końcu zadania 5 z zeszłych zajęć. Edytuj poniższe linijki kodu i porównaj wygląd plików.
+
+z5 <- read.csv("~/twoja_nazwa.csv", header = TRUE, row.names = 1)
+z5_2 <- read.csv("~/twoja_nazwa.csv", row.names = 1, col.names = c(1, 2, 3, 4, 5, 6, 7, 8, 9))
+z5_3 <- read.csv("twoja_nazwa.csv", header = TRUE)
+
+
+
+```
+
+# Spróbujmy ściągnąć pierwszy plik csv z internetu!
+
+```{r 2}
+# Pliki możemy ściągać z użyciem funkcji "download.file". Dzięki temu łatwiej jest np. napisać program do analizy danych i zmieniać jedynie input funkcji'download.file'.
+# Plików csv z danymi do analizy możemy szukać w różnych bazach, np. rządowych.
+
+# https://catalog.data.gov/
+# https://ckan.publishing.service.gov.uk/dataset/
+
+# Rządy różnych krajów podają otwarcie dane takie jak śmiertelność na choroby serca czy na nowotwory. Pozwala to na lepsze szacowanie problemów zdrowotnych w przyszłości, czy też na próbę powiązania tendencji do zachorowalności z jakimś innym aspektem (np. można byłoby przeanalizować jak czystość powietrza w Krakowie wpływa na zachorowalność na choroby płuc)
+
+# Spróbujmy wstępnie przeanalizować pewien plik csv. Skopiuj poniższy link i przeczytaj ogólne informacje dotyczące zestawu danych. Zauważ, że na stronie poza plikiem csv są też pliki pdf, które pozwolą Ci lepiej zrozumieć co oznaczają poszczególne kolumny w zestawie danych.
+
+# https://digital.nhs.uk/data-and-information/publications/statistical/nhs-outcomes-framework/march-2022/domain-1---preventing-people-from-dying-prematurely-nof/1.4-under-75-mortality-rate-from-cancer
+
+# Ściągnij zestaw NIE ZE STRONY a poprzez podaną niżej funkcję. Jeśli chcesz, zmień nazwę pliku 'output.csv' na nazwę dobrą dla Ciebie:
+
+download.file(url = "https://files.digital.nhs.uk/D9/DDA350/NHSOF_1.4_I00730_D.csv", destfile = "output.csv")
+
+# destfile określa nam ścieżkę zapisu pliku.
+
+```
+
+
+# Sprawdź w zakładce Files w swoim Working Directory czy plik się stworzył. Teraz zapiszmy ten plik w formie zmiennej 'now_ang' tzn nowotwory Anglia:
+
+```{r 3}
+now_ang <- read.csv("output.csv")
+```
+
+#lub dokładniej:
+
+```{r 4}
+now_ang <- read.table(file="output.csv", sep=",", header=TRUE)
+
+```
+
+# Teraz zmienna pojawiła się w zakładce Environment. Możemy kliknąć na jej nazwę, aby otworzyć stworzoną tabelę, lub użyć funkcji 'View()' aby uzyskać ten sam efekt:
+
+```{r 5}
+
+View(now_ang)
+
+```
+
+# Patrząc na tabelę, zastanów się czy rozumiesz wszystkie nazwy kolumn, co oznaczają. Następnie spójrz na wartości numeryczne - separatorem kolumn powinien być przecinek, a separatorem dziesiętneym - kropka.
+# Kolumny Numerator i Denominator nadal zawierają przecinki jako separatory tysięcy.
+# Możemy znaleźć i wymienić każdy przecinek kolejno w kolumnach Numerator i Denominator za pomocą funkcji "gsub":
+
+```{r 6}
+now_ang$Numerator <- gsub(",", "", now_ang$Numerator)
+now_ang$Denominator <- gsub(",", "", now_ang$Denominator)
+```
+
+# albo
+```{r 7}
+library(stringr)
+
+now_ang$Numerator <- str_replace_all(now_ang$Numerator, ",", "")
+
+```
+
+# Teraz zastanówmy się co oznaczają kolejne nazwy. Możesz sprawdzić to w pdf-ie załączonym w linku linijka 55, na stronie rządowej.
+
+# Załóżmy, że Numerator to śmiertelność dla danej grupy wiekowej, w danym roku, a Denominator to liczba populacji w całym kraju - tzn w Wielkej Brytanii.
+
+# Mogłeś/aś zauważyć, że w tym zestawie danych mamy 3 grupy w kolumnie "Gender" - Male, Female, All. Jeśli spojrzysz na dane dla tej samej grupy wiekowej, ale różnej płci, wartość Denominator dla Płci All powinna się równać Denominator Male + Denominator Female. Dla przykładu, w 2020 roku, grupa wiekowa All zawiera Denominator Male = 25883000, a Denominator Female = 25 801 600. Razem daje to 51684600, a w rzędzie dla Denominator All = 51684500, czyli tylko 100 osób różnicy. Widzimy więc, że zestaw może zawierać nieścisłości. Stanowi to podstawę do określenia czy powinniśmy wykluczyć pewne wartości z analizy. 
+# Np. w przypadku badań klinicznych wyniki dla grup mieszanych są inne niż wyniki dla osób konkretnej płci. Dodatkowo, w zestawach danych gdzie wartość jest podana ogólnie, często dane te są mniej dokładne i mniej można się nimi sugerować.
+
+# W tym konkretnym zestawie danych można zauważyć, że można z jego pomocą stworzyć wykres wielkości populacji w Angli, od 2003 do 2020. Możemy również sprawdzić jak śmiertelność zmienia się wraz z latami (zarówno pacjentów jak i z rokiem wykonywania analizy). Innym pomysłem jest zestawienie ilości kobiet/mężczyzn w danym roku, lub analiza ilości populacji kobiecej/męskiej w danych latach. Teoretycznie można się też pokusić o analizy śmiertelności na rakach w różnych regionach Anglii.
+
+
+# Nie musisz otwierać tabeli poza plikiem. Możesz poprosić funkcją o przedstawienie Ci początku bądź końca tabeli na koniec "chubnk'a" w pliku Rmd lub poniżej, w konsoli.
+```{r 8}
+head(now_ang)
+
+tail(now_ang)
+
+
+# Możesz też użyć poniższych funkcji, aby uzyskać dokładniejszy obraz tabeli/data frame'u:
+
+str(now_ang) # pokazuje podobny widok co ten w Environment po kliknięciu na białą strzałkę w niebieskim kółeczku po lewej stronie od nazwy zmiennej
+
+summary(now_ang) #pokazuje typ danych w zmiennej oraz długość! 
+
+```
+
+# Usuńmy kilka niepotrzebnych kolumn poprzez nadanie im wartości "pustej":
+```{r 9}
+now_ang$Indicator.value <-  NULL
+
+now_ang$Lower.CI <-  NULL
+
+now_ang$Upper.CI <-  NULL
+
+now_ang$Level.description <-  NULL
+
+now_ang$Level <-  NULL
+
+now_ang$Breakdown <-  NULL
+
+now_ang$Period.of.coverage <-  NULL
+
+```
+
+# Teraz zmieńmy trochę nazwy kolumn, aby je lepiej rozumieć:
+```{r 10}
+column_names <- c("Year", "Gender", "Age", "Mortality", "Population")
+
+names(now_ang) <- column_names
+
+```
+
+# Skupmy się teraz na indeksowaniu wartości:
+```{r 11}
+# Możemy stworzyć indexing numeryczny:
+
+gender_column <-now_ang[,2]
+year_gender_age <- now_ang[,1:3]
+
+
+# indeksowanie z użyciem nazw
+gender_column2 <-now_ang[,"Gender"]
+# zakres
+gender_column2 <-now_ang[1:3,"Gender"]
+
+# indeksowanie z użyciem konkretnej wartości w komórce:
+# Tylko wartości dla Płci żeńskiej:
+
+gender_column3 <- now_ang[now_ang$Gender == "Female",]
+
+# Ten sposób pozwala nam na dokładniejszą ekstrakcję danych. Nie musimy sami szukać zakresu danych w ten sposób.
+# Pozwala nam to również tworzyć mniejsze zestawy danych do osobnej analizy. Dzięki temu można osobno analizować np. śmiertelność na raka w danym zakresie wiekowym, bądź właśnie dla konkretnej płci.
+# Zauważ, że podobnie jak w Pythonie, "==" oznacza "identyczny", tzn. tutaj mamy wyciągnąć jedynie dane z wartością "Female" w kolumnie "Gender"
+
+# Zauważ, że do indeksowania używamy kwadratowych nawiasów, a do funkcji - zwykłych nawiasów.
+
+```
+
+#Factors = zmienne kategorialne
+
+```{r 12}
+
+#Mogłeś/aś zauważyć, że dane w naszej tabeli now_ang się powtarzają dla kolumn "Age" i "Gender". Po tej drugiej łatwiej to zauważyć - dane w tej kolumnie mogą mieć jedynie 3 typy wartości - Male, Female, All.
+# Oznacza to, że de facto mamy 3 kategorie w kolumnie Gender - Male, Female, All. Oznacza to, że nasz zestaw danych ma etykiety wieku Male, Female, All. Jeśli przekażemy komputerowi informację o tym, że w kolumnie Gender mamy powtarzający się wzór złożony z 3 etykiet, będzie on mógł kategoryzować nam kolumnę Gender wg. tych 3 kategorii.
+# Kategoryzowanie kolumn może być bardzo przydatne, jako że pozwala nam pozbyć się konieczności tworzenia osobnych zestawów danych dla konkretnych etykiet. Dodatkowo, kategoryzując konkretne kolumny możemy wywoływać funkcjami informacje odnośnie ich np. wielkości/długości.
+# W analizie danych często spotkasz się z kategoryzowaniem danych i często będziesz musiał poprosić komputer o skategoryzowanie danych kolumn. Użyjesz do tego funkcji "factor()".
+# Kategoryzowane kolumny będą wyglądać jak wektory z wartościami słownymi (character/string), ale traktowane będą jako wartości numeryczne, stąd należy uważać, aby przypadkowo nie planować na takich kolumnach równań matematycznych!
+
+now_ang$Gender <- factor(now_ang$Gender)
+
+# lub
+
+
+now_ang$Gender <- factor(now_ang$Gender, levels = c("Female", "Male", "Person"))
+
+
+# ALE! Jeśli wpiszemy mniej wartości (lub inne!) poziomów kategorii niż mamy w kolumnie - inne wartości będą wyświetlane jako "NA" czyli "Not Available Data"
+# Sprawdźmy to! ...ale na dodanej dodatkowo kolumnie 'Gender2' ;)
+
+now_ang$Gender2 <- factor(now_ang$Gender, levels = c("Female", "Male"))
+
+#I po sprawdzeniu usuńmy tą kolumnę, żeby nam nie wadziła:
+
+now_ang$Gender2 <- NULL
+                         
+# Możemy sprawdzić teraz funkcją podsumowującą ile poziomów kategorii ma nasza kolumna "Gender" i ile wartości znajdziemy dla każdej kategorii.
+
+summary(now_ang$Gender)
+
+```
+
+# Zmieńmy pozostałe kolumny character na factor
+```{r 13}
+now_ang$Age <- as.factor(now_ang$Age)
+now_ang$Year <- as.factor(now_ang$Year)
+```
+
+# Czasami komputer sam definiuje kolumny klasy character jako kolumny ze zmiennymi kategorialnymi (factors), co może być źródłem problemów. Stąd warto już przy samym ładowaniu pliku csv dodać klauzulę "stringsasfactors":
+```{r 14}
+csvfactors <- read.csv("output.csv", stringsAsFactors = TRUE)
+str(csvfactors)
+csvnotfactors <- read.csv("output.csv", stringsAsFactors = FALSE)
+str(csvnotfactors)
+
+#Porównaj stworzone zmienne.
+
+```
+
+# Ilość poszczególnych poziomów może być ważna dla naszej analizy danych. Np. gdyby było wyraźnie mniej danych badawczych dla grupy Male niż Female to warto się zastanowić nad tym, czy dobrze jest porównywać te grupy między sobą. Logicznym bowiem jest, że porównywanie wyników 50 badań z udziałem kobiet do wyników 200 badań z udziałem kobiet może być bezpodstawne, jako że jedna grupa ma 4 razy więcej danych badawczych od drugiej, a więc istotność statystyczna naszych konkluzji jest wysoce zaniżona.
+
+# W naszym przypadku powinniśmy widzieć taką samą liczbę badań zarówno dla kobiet i mężczyzn - ale o wiele mniejszą ilość badań dla grupy "Person". Oznacza to, iż warto się przyjrzeć tej konkretnej grupie i jej wynikom - jeśli proporcjonalnie śmiertelność jest bardzo różna niż w przypadku wartości uzyskanych dla kategorii Male lub Female to warto zastanowić się nad wykluczeniem grupy "Person" z analizy śmiertelności w kontekście populacyjnym.
+
+# Możemy też użyć funkcji pozwalającej nam zobaczyć jak nazywają się kategorie w konkretnej kolumnie tabeli:
+```{r 15}
+levels(now_ang$Gender)
+
+# Lub jaka jest ich liczba (jak wiele poziomów/kategorii zawiera kolumna)
+
+nlevels(now_ang$Gender)
+
+
+# Nasze kategorie możemy też zmienić na wartości numeryczne 1, 2, 3, bądź kazać traktować kategorie jako ciąg znaków. Jednak aby się nie denerwować koniecznością powrotu tabeli do stanu właściwego, stwórzmy osobną zmienną, aby zobaczyć jak zmienna będzie rozumiana po zmianie klasy:
+
+gender <- now_ang$Gender
+
+gender1 <- as.numeric(gender) 
+
+gender2 <- as.character(gender)
+
+# Spójrz w 'Environment' i zwróć uwagę między trzema stworzonymi zmiennymi.
+
+
+now_ang$Mortality <- as.numeric(now_ang$Mortality)
+now_ang$Population <- as.numeric(now_ang$Population)
+
+g1<- data.frame(gender1)
+
+# Dzięki skategoryzowaniu kolumny "Gender" możemy łatwiej zwizualizować nasze wyniki.
+
+```
+
+
+# Sprawdźmy teraz czy mamy w naszym zestawie danych wartości niezdefiniowane (NA)!
+```{r 16}
+
+table(is.na(now_ang))
+table(is.na(now_ang$Mortality))
+table(is.na(now_ang$Population))
+table(is.na(now_ang$Age))
+table(is.na(now_ang$Gender))
+
+# Jeśli chcemy, możemy wyrzucić te dane z tabeli w ten sposób:
+
+now_ang2 <- now_ang[complete.cases(now_ang), ]
+
+# Sprawdźmy jeszcze raz wynik funkcji table():
+table(!is.na(now_ang))
+table(!is.na(now_ang2))
+
+# Możemy za pomocą tej funkcji sprawdzać różne aspekty naszych zmiennych, np. to czy zawierają wartości klasyfikowane jako factor czyli zmienna kategorialna:
+
+table(is.factor(now_ang$Gender))
+table(is.factor(now_ang$Mortality))
+
+
+# Możemy też stworzyć małą matrycę wyników
+
+table(is.factor(now_ang$Gender), is.numeric(now_ang$Mortality)) #Oba true
+
+table(is.factor(now_ang$Mortality), is.numeric(now_ang$Gender)) # Oba False
+
+table(is.factor(now_ang$Gender), is.numeric(now_ang$Age)) # 1 true 1 false
+
+```
+
+
+# Do wizualizacji najprościej użyć funkcji 'plot()'.
+# Zauważ, że teraz aktywacja kodu skrótem klawiszowym kończy się koniecznością scrollowania do końca "chunk"a - łatwiej może być Ci przeklejać kod do konsoli i widzieć wykresy w prawym dolnym rogu RStudio, tam gdzie przeglądasz pliki, bądź sprawdzasz pakiety.
+``` {r 17}
+
+plot(now_ang$Gender)
+
+levels(now_ang$Gender)[1:3] <-c("Female", "Male", "Person")
+
+```
+
+# Funkcja plot() sama wybiera najodpowiedniejszy typ wykresu. Widzisz więc, że pierwszy i drugi wykres się od siebie widocznie różnią. Możesz też sam zdefiniować typ wykresu w środku funkcji plot():
+``` {r 18}
+
+# punktowy
+plot(now_ang$Mortality, now_ang$Population, type = "p", xlab= "Śmiertelność [nowotwory]", ylab = "Całkowita populacja Anglii", main = "Zależność śmiertelności w stosunku do ilości populacji", col = "blue", pch = 0)
+
+# liniowy 
+plot(now_ang$Mortality, now_ang$Population, type = "l", xlab= "Śmiertelność [nowotwory]", ylab = "Całkowita populacja Anglii", main = "Zależność śmiertelności w stosunku do ilości populacji", col = "blue", pch = 0)
+
+# oba na raz
+plot(now_ang$Mortality, now_ang$Population, type= "b", xlab= "Śmiertelność [nowotwory]", ylab = "Całkowita populacja Anglii", main = "Zależność śmiertelności w stosunku do ilości populacji", col = "blue", pch = 0)
+
+# lub napisać "boxplot", "histogram", "density", "pie"
+# lub dla pojedynczych wykresów używaj funkcji boxplot(), hist(), density(), pie()
+```
+
+# Stwórzmy teraz bardziej skomplikowany wykres:
+``` {r 19}
+
+plot(now_ang$Mortality, now_ang$Population, xlab= "Śmiertelność [nowotwory]", ylab = "Całkowita populacja Anglii", main = "Zależność śmiertelności w stosunku do ilości populacji", col = "blue", pch = 0)
+
+plot(now_ang$Gender, now_ang$Mortality, xlab= "Płeć", ylab = "Ilość przypadków śmiertelnych", main = "Śmiertelność na choroby nowotworowe w zależności od płci [2003-2020]", col = "green", pch = 1)
+
+
+# pch oznacza tutaj kształt punktów, może mieć wartość od 0 do 20, gdzie 1 to kółko.
+
+
+# Spójrzmy teraz na ilość przypadków śmiertelnych wśród pacjentów nowotworowych w zakresie lat 2003 do 2020 bez rozgraniczenia na płeć:
+
+plot(now_ang$Age, now_ang$Mortality, xlab= "Zakres wiekowy", ylab = "Ilość przypadków śmiertelnych", main = "Śmiertelność na choroby nowotworowe w zależności od płci [2003-2020]", col = "pink", pch = 2)
+
+# Spróbuj stworzyć własne wykresy i sprawdź ich wygląd!
+
+```
+
+# Teraz warto się dowiedzieć jak zapisać uzyskane wykresy w formie pdf. Niestety musimy sie pozbyć polskich znaków z nazw, nierozumianych przez tą funkcję:
+``` {r 20}
+
+pdf('Plot1.pdf', width=9.0, height = 10.0)
+par(mfrow = c(3,1), 
+    mar = c(2, 1, 2, 1), #marginesy (dół, lewo, góra, prawo)
+    oma = c(5, 5, 5, 5), #tzw outer margin czyli zewnętrzny margines, 
+    mgp = c(2, 0.8, 0), # pozycja etykiet x i y w wykresach i samych linii dot. wykresu
+    col.axis = "blue", # kolor etykiet osi x i y
+    cex.axis = 1, # rozmiar tych etykiet
+    col.lab = "green", # kolor nazw etykiet
+    cex.lab = 1, # rozmiar tych etykiet
+    bg = "white"
+    )
+plot(now_ang$Gender, now_ang$Mortality, xlab= "Plec", ylab = "Ilosc przypadkow smiertelnych", main = "Z uwzglednieniem plci", col = "green")
+plot(now_ang$Age, now_ang$Mortality, xlab= "Zakres wiekowy", ylab = "Ilosc przypadkow smiertelnych", main = "Z uwzglednieniem wieku", col = "pink")
+mtext("Smiertelnosc na choroby nowotworowe w zaleznosci od plci [2003-2020]", outer = TRUE)
+dev.off()
+
+# Obejrzyj uzyskany plik, zastanów się co możesz w nim ewentualnie zmienić. Skopiuj kod niżej i spróbuj go pozmieniać!
+
+
+
+
+
+
+
+
+# Jeśli chcesz, po wywołaniu wykresów w zakładce Plots możesz użyć opcji Export, aby eksportować wykres do pliku png lub pdf.
+
+```
+
+
+
+
+# Zapiszmy nasz plik now_ang2 bez wartości NA jako plik csv do późniejszego otworzenia. Stwórzmy nowe zmienne now_ang3 i 4, które odczytają stworzone pliki. Porównaj ich wygląd klikając ich nazwy w Environment oraz po samych informacjach w tej zakładce. Co robi row.names = TRUE?
+``` {r 21}
+
+write.csv(now_ang, "now_ang_noNA_True.csv", row.names= TRUE)
+
+write.csv(now_ang, "now_ang_noNA_False.csv", row.names= FALSE)
+
+now_ang3 <- read.csv2(file="now_ang_noNA_True.csv", sep=",", header=TRUE)
+
+now_ang4 <- read.csv2(file="now_ang_noNA_False.csv", sep=",", header=TRUE)
+
+
+```

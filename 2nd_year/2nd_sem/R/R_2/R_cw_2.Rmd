@@ -1,0 +1,188 @@
+---
+title: "Untitled"
+author: "Klaudia Chmielewska"
+date: "2023-04-27"
+output: pdf_document
+---
+
+## Ćwiczenie 4
+
+``` {r ex4}
+
+# Studenci na zajęciach syntezowali anilinę. Następnie, w celu sprawdzenia czystości wykonali analizę HPLC. Uzyskane wartości czystości:
+#Student1 = 98
+#Student2 = 94
+#Student3 = 90
+#Student4 = 99
+#Student5 = 96
+#Student6 = 94
+#Students 7 i 8 nie skończyli zadania.
+
+#4.1 Stwórz wektor zawierające wszystkie dane 8 studentów.
+czystosc<-c(98,94,90,99,96,94,NA,NA)
+
+
+#4.2 Spróbuj na 2 różne sposoby poprosić wyrażeniem o pokaanie jak wielu studentów ukończyło zadanie?
+ilu_studentow_bralo_udzial<-length(czystosc)
+ilu_studentow_skonczylo<-length(czystosc[!is.na(czystosc)])
+#4.3 Jak policzyć średnią czystość?
+srednia<-mean(czystosc[!is.na(czystosc)])
+
+
+#4.4 Jak wielu studentów uzyskało czystość co najmniej 95%?
+studenci_ukonczyli <- czystosc[!is.na(czystosc)]
+ilu_studentow_95 <- studenci_ukonczyli[studenci_ukonczyli>95]
+length(ilu_studentow_95)
+
+
+```
+
+
+
+##Exercise 5 [missing values + matrices + creating tables]
+
+``` {r ex5}
+
+#Grupa studentów syntezowała na zajęciach 3 substancje - aspirynę, kwas cynamonowy i kawowy. Niżej podano wartości wydajności:
+
+#Student 1 (Anna):  
+# Aspirin : 60%; cinnamic acid : 64%. Caffeic acid: 82% 
+
+#Student 2 (Boris):
+
+#[Yields} Aspirin : 55%; cinnamic acid : 50%. Caffeic acid: 78% 
+
+#Student 3 (Fabio):
+
+#[Yields} Aspirin : 88%; cinnamic acid : 57%. Caffeic acid: 88% 
+
+#Student 4 (Carla):
+
+#[Yields} Aspirin : 74%; cinnamic acid : 52%. Caffeic acid: 67% 
+
+#Student 5 (Monica):
+
+#[Yields} Aspirin : 70%; cinnamic acid : 68%. Caffeic acid: 82% 
+
+#Student 6 (Martin):
+
+#[Yields} Aspirin : 82%; cinnamic acid : 62%. Caffeic acid: 60% 
+
+
+#5.1 Zmień dane w wektory, a następnie połącz je w data frame. Zmień nazwy kolumn funkcją.
+aspirin<-c(60,55,88,74,70,82)
+cinnamic<-c(64,50,57,52,68,62)
+caffeic<-c(82,78,88,67,82,60)
+
+dim1<-cbind(aspirin,cinnamic,caffeic)
+
+wydajnosc_frame<-data.frame(dim1)
+
+names(wydajnosc_frame) <- c("aspirin","cynnamic_acid","caffeic_acid")
+
+row.names(wydajnosc_frame)<-c("Anna","Boris","Fabio","Carla","Monica","Martin")
+
+#5.2 Jaka jest średnia wydajność syntezy dla każdego z poszczególnych związków? Która jest najwyższa?
+sr_aspirin<-mean(aspirin)
+sr_cinnamic<-mean(cinnamic)
+sr_caffeic<-mean(caffeic)
+
+
+#5.3 Sprawdź ile osób wykonywało syntezy bez samodzielnego liczenia.
+
+len_aspirin<-length(aspirin)
+len_cinnamic<-length(cinnamic)
+len_caffeic<-length(caffeic)
+
+
+#5.4 Dodaj rząd ze średnią wartością wydajności na koniec tabeli i zapisz jako osobny data frame. Zrób to poprzez rbind.
+sr_aspirin<-round(sr_aspirin,digits=1)
+sr_cinnamic<-round(sr_cinnamic,digits=1)
+sr_caffeic<-round(sr_caffeic,digits=1)
+
+row_dl<-cbind(sr_aspirin,sr_cinnamic,sr_caffeic)
+
+dim2<-rbind(dim1,row_dl)
+
+wydajnosc_frame_2<-data.frame(dim2)
+
+row.names(wydajnosc_frame_2)<-c("Anna","Boris","Fabio","Carla","Monica","Martin","srednia")
+
+names(wydajnosc_frame_2) <- c("aspirin","cynnamic_acid","caffeic_acid")
+
+#5.5 Porównaj posiadane wartości wydajności do wartości literaturowych:
+#aspiryna = 86%
+#kwas cynamonowy = 65%
+#kwas kawowy = 72%
+#Stwórz wyrażenie, które pozwoli Ci stworzyć nową kolumnę zawierającą warttości boolean dot. tego czy danemu studentowi udało się osiągnąć wyższą wartość niż ta literaturowa.
+
+high_aspirin<- aspirin > 86
+wydajnosc_frame$`high aspirin`<-high_aspirin
+wydajnosc_frame$`high cinnamic`<-cinnamic > 65
+wydajnosc_frame$`high caffeic`<-caffeic > 72
+
+#5.6 Napisz wyrażenie, które wyciągnie przed nawias wartość wydajności, którą Carla uzyskała dla kwasu cynamonowego. Jaka byłaby wartość dla Borysa? Która jest większa? Napisz wyrażenie które to sprawdzi.
+
+
+carla = wydajnosc_frame_2[4,2] 
+borys = wydajnosc_frame_2[2,2] 
+result = max(carla, borys)
+
+#5.7 Napisz wyrażenie (funkcja), które pokaże dane data frame'u
+
+dane_funkcja<-head(wydajnosc_frame_2)
+
+#5.8 Podaj wyrażeniem tylko wartości nazw substancji w data frame.
+
+colnames(wydajnosc_frame_2)
+
+
+#5.9 Wylistuj wyrażeniem jak wielu studentom udało się uzyskać wydajność w bardfzo podobnym zakresie do literaturowego - maksymalnie 10% różnicy. Stwórz 3 dodatkowe kolumny odpowiadające na to pytanie i dodaj je do data frame.
+similar_range_aspirin <- 96 & aspirin >= 76
+similar_range_cinnamic <- cinnamic <= 75 & cinnamic >= 55
+similar_range_caffeic <- caffeic <= 82 & caffeic >= 62
+
+length(which(similar_range_aspirin == TRUE))
+wydajnosc_frame$`Similar range aspirin` <- similar_range_aspirin
+length(which(similar_range_cinnamic == TRUE))
+wydajnosc_frame$`Similar range cinnamic` <- similar_range_cinnamic
+length(which(similar_range_caffeic == TRUE))
+wydajnosc_frame$`Similar range caffeic` <- similar_range_caffeic
+
+#5.10 Prowadzący zapomniał dopisać do zajęć studentkę Marię, która przepisała się  innej grupy. Jak dodałbyś/dodałabyś jej dane syntez zakładając, że studentka wykonała tylko syntezę aspiryny i kwasu cynamonowego?
+aspirin <- c(aspirin, 82)
+cinnamic <- c(cinnamic, 78)
+caffeic <- c(caffeic, NA)
+
+maria_table <- cbind(aspirin, cinnamic, caffeic)
+data.frame(maria_table)
+maria_frame <- data.frame(maria_table)
+names(maria_frame) <- c("aspirin", "cinnamic", "caffeic")
+row.names(maria_frame) <- c("Anna","Boris","Fabio","Carla","Monica","Martin","Maria")
+
+#5.11 Policz ponownie średnią, uwzględniając wyrażenie pomijające NA. Zbuduj 2 takie wyrażenia.
+
+sr_aspirin_maria<-mean(aspirin,na.rm = TRUE)
+sr_cinnamic_maria<-mean(cinnamic,na.rm = TRUE)
+sr_caffeic_maria<-mean(caffeic,na.rm = TRUE)
+
+#5.12 Sprawdź wymiary data frame'u za pomocą funkcji
+
+wymiary_maria<-dim(maria_frame)
+
+#5.13 Wyciągnij z data frame tylko wydajności uzyskane przez Annę.
+
+anna_wyniki<-maria_frame[1,]
+
+#5.14 Aby zaliczyć zajęcia, studenci musieli mieć co najmniej 60% wydajności z 3 syntez łącznie. Sprawdź który student zdał zajęcia i stwórz nową kolumnę z boolean values odpowiadającą na to pytanie. (Weź pod uwagę, że można zaliczyć zajęcia, nawet jeśli nie zrobiło się 1 syntezy)
+passed = apply(maria_table, 1, function(row) mean(na.omit(row)) >= 60)
+maria_frame$has_passed <- passed
+
+#5.15 Zapisz zestaw danych jako plik csv używając do tego funkcji.
+
+write.csv(maria_frame, "maria_wyniki.csv", row.names= TRUE)
+write.csv(wydajnosc_frame, "df_wszyscy.csv", row.names= TRUE)
+
+
+```
+

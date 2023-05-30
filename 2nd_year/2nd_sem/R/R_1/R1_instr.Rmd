@@ -1,0 +1,500 @@
+---
+title: "Introduction to R Class 1;' Klaudia Chmielewska Uni of Gdansk"
+output: html_notebook:
+    toc: yes
+    toc_float: yes
+css: mystyle.css
+---
+
+
+#Stwórz nowy projekt i zapisz swój folder jako folder główny
+
+## Aby rozpocząć pracę nad skryptem w języku R, otwieramy RStudio i po kolei zwracamy uwagę na to czego się składa. W lewym górnym rogu mamy opcje od "File" po "Help" oraz ikonki, które usprawniają naszą pracę. Dla przykładu, aby stworzyć nowy projekt mamy 2 możliwości: 
+
+### File->New Project
+
+## Otwiera nam się menu gdzie możemy wybrać czy chcemy stworzyć zarówno nowy projekt, jak i folder dedykowany do naszej pracy nad projektem - czy chcemy skorzystać z istniejącego już folderu (Directory).
+
+## Jeśli wybierzemy stworzenie nowego folderu, zostaniemy poproszeni o informację jaka ma być nazwa tego folderu oraz gdzie ma być umiejscowiony (Czy ma być nowym folderem w Dokumentach, Pobranych, w Program Files czy gdzie indziej?)
+
+## Po stworzeniu projektu, w prawym dolnym rogu RStudio zobaczymy zawartość nowo-stworzonego folderu - powinniśmy mieć w nim jedynie nasz nowy Projekt.
+
+## Teraz możemy stworzyć pierwszy plik w naszym projekcie!
+
+## W lewym górnym rogu, pod zakładką "Files" masz plusik na tle zielonego okręgu, znajdujący się na ikonce z białą kartką. Kliknij na czarny trójkącik obok i z rozwiniętej listy wybierz pozycję pierwszą - R Script. Zauważ, że możesz wywołać stworzenie takiego nowego pliku z użyciem komendy "Ctrl+Shift+N"!.
+
+## Teraz, ponownie z tej samej rozwijanej listy, wybierz R Markdown. Zwróć uwagę na różnice w zapisie i wyglądzie pliku.
+
+## Plik .R jest podstawowym plikiem gdzie zapisujemy nasz kod, a .Rmd pozwala nam przekształcać nasze prośby do komputera w pliki .pdf lub .doc, z wynikiem kodu, ale już bez jego uwzględnienia.
+
+## Dodatkowym plusem funkcjonalności plików Rmd jest obecność tzw. "Chunk" czyli fragmentów rozumianych przez .Rmd jako kod, który ma zostać wykonany (executable code). Dzięki ich istnieniu możemy również zwijać i rozwijać tekst wedle potrzeb co sprawia, że możemy lepiej zorganizować nasz kod.
+
+## Jeśli zapomnisz gdzie masz swoje pliki, w prawym dolnym rogu RStudio spójrz na zakładkę Files i następnie znajdź niebieskie koło zębate z napisem More. Znajdziesz tam opcję "Go To Your Working Directory". Zauważ też, że możesz ustanowić dany folder Twoim nowym folderem głównym gdzie będą zapisywać się wszystkie pliki - "Set as Your working directory" albo też otworzyć nowe okno z wybranym folderem z użyciem "Show Folder in New Window".
+
+## W tej zakładce Files możesz też dodatkowo tworzyć nowe foldery. Nie na wszystko więc potrzebujesz tu komendy! Mimo to, jeśli je wolisz:
+
+##Ustanów konkretny folder swoim głównym (working directory)
+```{r 1st}
+setwd("~/Intro to R/R1")
+```
+
+
+# Sprawdź który folder jest tym głównym 
+
+```{r 2nd}
+
+getwd()
+
+```
+
+
+## Zanim jeszcze zaczniesz pracę, warto sprawdzić jakie opcje ustawione są w RStudio. Jest to ważne aby RStudio "wiedział" czy zapisywać pliki przy zamykaniu programu albo czy pokazywać spowrotem pliki naszego projektu przy ponownym włączeniu RStudio.
+
+### Tools->Global Options
+
+## Dodatkowo możemy tu sprawdzić jaką wersję R mamy zainstalowaną i jaki system (32/64bit) mamy.
+
+## Możemy ustanowić też odgórny "Working Directory", gdzie będą zapisywane wszystkie pliki, które nie są w żadnym znanym projekcie.
+
+
+## Stwórz teraz swój prosty plik .R . Możesz w nim zapisywać kod, jest to taki notatnik, który będzie rozumiany jako kod który jest executable, czyli rozumiany jako to samo co wpisujesz w konsoli (nie jest to zwykły tekst)
+
+## Napisz w nim " getwd() ". Teraz musisz porozumieć się z RStudio, aby przekazał Twoje zapytanie, twóją prośbę o wykonanie funkcji getwd, do komputera. Możesz aktywować kod na kilka sposobów:
+
+### 1. Zaznacz swój kod w edytorze (lewy górny element programu). U góry edytora, po jego prawej stronie znajduje się przycisk "Run". Kliknij na niego i zaznacz "Run selected lines". Zauważ, że możesz też poprosić o aktywację większej części kodu, np. możesz aktywować kod znajdujący się w konkretnym "Chunk"-u.
+
+### 2. Znowu zaznacz kod w edytorze. Tym razem naciśnij kombinację znaków: "Ctrl+Enter". Na dole w konsoli (Lewy dolny fragment RStudio) powinieneś zobaczyć wynik aktywowanej funkcji.
+
+### 3. Zaznacz kod i skopiuj go do Console. Wklej i kliknij Enter. Pamiętaj jedynie, że dane w konsoli nie będą stale zapamiętane i trudniejszym jest dojście do tego co zrobiliśmy nie tak, jeśli nasz kod nie działa. JEDNAK! Ta opcja przydaje się, gdy mamy coś w środku scalonego "Chunk"-a. Chunk ma to do siebie, że aktywowany w nim kod pokaże rezultat NA KOŃCU Chunk-a. To jest często niewygodne, gdy chcemy zwizualizować graf/wykres i łatwiej przekopiować kod do konsoli.
+
+
+## Jeśli przeglądasz czyiś kod i natrafiasz na funkcję/komendę, której nie rozumiesz - napisz przed nią znak zapytania, zaznacz go razem z nazwą nieznanego wyrażenia i aktywuj kod (np. Ctrl+Enter).
+## W prawym dolnym fragmencie RStudio, gdzie masz zakładkę Files, przełączy się ona na zakładkę "Help", gdzie dostaniesz krótką informację dot. wybranego wyrażenia. Wypróbuj aktywowanie kodu i wyszukiwanie informacji na temat funkcji na podanych przykładach:
+
+```{r}
+
+?help
+?download.file()
+?save
+?install.packages()
+
+```
+
+
+#Jeśli zapomnisz jak nazywa się funkcja, której chcesz użyć, możesz posłużyć się funkcją help.search(""), gdzie między znaki cytowania musisz wstawić fragment nazwy, którą chcesz wyszukać.
+
+```{r}
+
+help.search("download")
+help.search("tidyverse")
+
+```
+
+## R podobnie jak Python, ma tzw. "paczki", ang. "packages", które zawierają zdefiniowane funkcje. Oznacza to, że istnieje możliwość napisania własnej funkcji, która oblicza to co jest nam potrzebne. W związku z tym, czasami warto poszukać czy dla zadania, które trzeba wykonać nie ma już gotowej paczki.
+
+## Paczki są darmowe i jest wiele takich, które obliczają funkcje chemiczne i biologiczne.
+## Więcej o paczkach możesz poczytać na głównej stronie R: https://www.r-project.org/search.html
+
+#Jeśli chcesz się dowiedzieć jakie paczki masz zainstalowane na swoim komputerze, użyj funkcji sessionInfo().
+
+```{r}
+
+sessionInfo()
+
+```
+
+
+#Za każdym razem gdy wyłączasz komputer, wyłączasz również załączenie/aktywację zainstalowanych paczek. Jeśli więc zainstalowałeś paczkę, a nie widzisz jej po załadowaniu sessionInfo() - użyj funkcji library()
+
+```{r}
+
+library("tidyverse")
+
+```
+
+# Jeśli jednak nie masz paczki wcale, użyj install.packages(). My w sali zajęciowej mamy zainstalowane wszystko czego potrzebujemy, będziemy więc używać jedynie funkcji "library".
+
+```{r}
+
+install.packages("tidyverse")
+
+```
+
+## Zauważ, że istnieje zakładka w prawym dolnym elemencie RStudio - Packages. Możesz tam przeglądać, szukać i dowiadywać się o różnych paczkach.
+
+
+# Wiemy już wstępnie jak rozmawiać z komputerem z użyciem języka R. Czas kazać komputerowi zapamiętać pewne informacje!
+
+## Podobnie jak w Pythonie, w R możemy ustanawiać tzw. zmienne (variables). Działa to nieco jak przy nauce języków obcych - wybieramy pewną nazwę/ciąg znaków, liter i cyfr i mówimy, że oznacza ona jakąś inną wartość, słowną bądź numeryczną.
+
+```{r}
+
+pierwsza_zmienna <- 5
+
+```
+## W tym wypadku pokazujemy, że wartość po lewej oznacza to co mamy napisanego po prawej. W R do ustanawiania zmiennych wykorzystujemy strzałkę od prawej do lewej "<-", zwana też "assigning operator", która ma być rozumiana jako "to po prawej oznacza to po lewej - jeśli napiszę to po lewej czyli "pierwsza_zmienna" w konsoli, powinnam dostać odpowiedź, że zbiór znajdujący się pod tą nazwą oznacza liczbę 5.
+
+## To znaczy, że podobnie jak w matematyce szukali Państwo "x" tak tu tłumaczycie/definiujecie czym jest "x".
+
+## Wpisz w konsolę następujące nazwy. Co jest rezultatem?
+
+```{r}
+
+pierwsza_zmienna
+
+Pierwsza_zmienna
+
+```
+
+## Pierwsza nazwa powinna nam pokazać numer "5", ponieważ tak zdefiniowaliśmy wartość "pierwsza_zmienna" na początku. Jednak "Pierwsza_zmienna" pokazuje na w konsoli błąd - nie znaleziono tej wartości. To dlatego, że R rozróżnia litery duże i małe. pierwsza_zmienna nie jest więc tym samym co Pierwsza_zmienna.
+
+## Dodatkowo należy pamiętać o kilku zasadach przy definiowaniu nazw zmiennych, aby nie zostały one przypadkowo zrozumiane jako co innego.
+
+## Na przykład możliwe, że zwróciłeś uwagę na to, że niektóre funkcje wyżej zawierały kropki w nazwach. Z tego powodu lepiej nie używać w nazwach zmiennych. Podobnie nie wolno używać spacji, ponieważ ten znak uznawany jest za koniec danego fragmentu kodu.
+## Nie zaczyna się nazw od numerów! "2x" ŹLE "x2" DOBRZE
+
+# Spróbujmy stworzyć kolejną zmienną! Anna ma 10 lat. Stwórzmy zmienną która będzie pamiętała wiek Anny:
+
+```{r}
+Anna <- 10
+```
+
+## Teraz jeśli znamy wiek większej grupy ludzi, możemy podobnie zapisać go w formie zmiennej i wpisując nazwę zmiennej do konsoli dowiedzieć się ile lat ma konkretna osoba. Możesz również użyć funkcji print, bez znaków cytowania, aby poprosić o pokazanie co znajduje się w środku naszej zmiennej. Jeśli wpiszemy znaki cytowania, funkcja print po prostu nam pokaże w konsoli tekst, który umieścimy między znakami cytowania. Innym sposobem na uwidocznienie wyniku funkcji/ustanawiania zmiennej jest wpisanie wyrażenia w nawias
+
+```{r kill count}
+Anna <- 10
+Marek <- 15
+Zosia <- 12
+Gosia <- 14
+Basia <- 10
+
+(Bartek <- 12)
+(Martyna <- 5)
+
+Anna
+Marek
+Zosia
+Gosia
+Basia
+
+print(Anna)
+print(Basia)
+
+print("Anna")
+print("Basia")
+
+```
+
+## Czy zauważyłeś, że w prawym górnym fragmencie RStudio, w zakładce "Environment" pojawił się nowy tekst?
+
+## 'Environment' pokazuje nam jakie zmienne zostały dodane. Zakładka ta rozróżnia jaki jest typ informacji (czy jest to pojedyncza cyfra, czy zbiór danych, tabela a może funkcja?)
+
+## A co jeśli nie dokończymy pisać kodu? Zwróć uwagę, że standardowo w konsoli, gdy komputer jest gotowy do przyjęcia nowego zadania, znajduje się znak ">". Jeśli kod który wpiszemy będzie nieskończony, znak ten zmieni się na "+", co jest zapytaniem "Nie zapomniałeś czegoś dopisać na końcu?". Zazwyczaj tym zapomnianym elementem jest nawias.
+
+```{r}
+
+nowa_zmienna2 <- 
+
+```
+
+
+## Teraz możemy przejść do prostych działań arytmetycznych na liczbach i na zmiennych!
+
+
+## W konsolę możemy wpisywać równania arytmetyczne, podobnie jak w aplikacji kalkulatora. Spróbuj aktywować niżej podane fragmenty kodu:
+
+```{r}
+
+5 + 13
+
+24 - 8
+
+24^2
+
+24*2
+
+35/5
+
+```
+
+## Oczywiście w ten sam sposób możemy prosić o wykonywanie działań na naszych zmiennych.
+## Ile lat starszy od Anny jest Bartek?
+## A Basia od Anny?
+## Czy Bartek i Zosia mają ten sam wiek? Podziel jedno przez drugie
+
+```{r}
+
+Bartek - Anna
+
+Basia - Anna
+
+Bartek / Zosia
+
+```
+
+## Musimy jednak pamiętać, że jeśli dwukrotnie nadpiszemy tą samą zmienną (zmienimy jej wartość na inną) to komputer zapamięta jedynie tą ostatnią
+
+##Spójrz na ten przykład:
+```{r}
+#What is the value of 'var_index' after running 
+# all the next 4 lines and why?
+
+new_variable <- 5
+(var_index <- new_variable / 2)
+new_variable <- 10
+(var_index <- new_variable / 2)
+```
+
+## Jaka jest wartość ostatniego równania z new_variable? Która wartość new_variable została wzięta pod uwagę?
+
+
+## Czasami równania matematyczne nie są na tyle proste, aby wystarczyły nam jedynie takie symbole jak * / ^.
+
+## W takich chwilach posiłkujemy się funkcjami.
+
+## Ich przykłady znajdziesz poniżej:
+```{r}
+x<-2.5
+k<-2
+base<-4
+
+min(x)        # minimal value from a given set 'x'
+max(x)        # maximum value from a given set 'x'
+mean(x)       # the mean value from a given set 'x'
+sum(x)        # sum of all (numerical) values from a given set 'x'
+sd(x)         # standard deviation from a given set 'x'
+var(x)        # variance from a given set 'x' [how different are our data in a given set]
+median(x)     # median from a given set 'x'
+range(x)      # range of set 'x' 
+abs(x)        # absolute value of x [this means that R will bring us distance from 0 to a given value, regardless of the direction - so value '-1.5' will be printed as "1.5" because it's length from 0 on the linear graph is 1.5]
+log(x)        # natural logarithm of 'x', where base is 'e'
+log(x, base)  # logarithm of 'x' with the base different than 'e'
+log10(x)      # logarithm of 'x' with the base 10
+sqrt(x)       # square root of 'x'
+signif(x, k)  # a value of 'x' rounded up 
+
+```
+
+## Wejdź w dodatkowy plik "R1_math_example". Zdefiniuj x i y w swoim kodzie i przepisz równania.
+
+```{r}
+x<-2
+y<-49
+
+((2*y)/x)
+((2*sqrt(y))/(x^3))
+((y+1)/x)
+```
+
+## Podobnie jak znów w matematyce, czasami wyniki zaokrąglamy do pewnych wartości. Do tego możemy użyć funkcji round i signif:
+
+```{r}
+
+x <- 23.45
+
+
+round(x)              #23 rounds up to the next natural number 
+round(x, digits = 0)  #23
+round(x, digits = 1)  #23.4 rounds up until first place after "."
+round(x, digits = 2)  #23.45 rounds up until 2nd place
+
+signif(x, 1) #20 full digits
+signif(x, 2) #23
+signif(x, 3) #23.4 until 0.1 (23.4)
+signif(x, 4) #23.45
+
+```
+
+
+## Przykład 2:
+
+```{r}
+
+
+y <- -23.54
+
+round(y)              # -24 
+round(y, digits = 0)  # -24
+round(y, digits = 1)  # -23.5
+round(y, digits = 2)  # -23.54
+
+signif(y, 1) # -20 
+signif(y, 2) # -24
+signif(y, 3) # -23.5
+signif(y, 4) # -23.54
+
+
+
+```
+
+
+## Jak pewnie zauważyłeś, wpisywanie wieku każdej kolejnej osoby jako kolejnej zmiennej jest męczące i zajęłoby mnóstwo miejsca i czasu. Zamiast tego, dana zmienna może oznaczać zestaw liczb bądź słów.
+## Podobnie jak rzeczy pakujemy w walizkę, tak dane możemy zapakować w jedną zmienną. Potrzebujemy jednak plecaka - w tym kontekście będzie to funkcja upakowująca kilka elementów do jednej zmiennej. Tą funkcją jest zwykła literka "c". Taka zmienna będzie teraz wektorem, bądź listą.
+## W związku z tym, możemy zrobić zmienną, która będzie pamiętała jak nazywają się dzieci, których wiek analizujemy i drugą, zawierającą ich wiek.
+## Zauważ, że jeśli napiszesz tekst bez znaków cytowania to traktowane to będzie jak obiekty, czyli zmienna "imiona" jeśli ma obiekt Anna to nie będzie miał on wartości "Anna" a wartość 10, którą ustanowiliśmy wcześniej.
+
+
+```{r}
+
+vector1 <- c(value1, value2, ...)
+
+imiona <- c("Anna", "Marek", "Basia") # DOBRZE
+imiona <- c(Anna, Marek, Basia) #ŹLE
+
+wiek <- c( 10, 15, 10) 
+
+```
+
+## Spójrz w zakładkę Environment. Zauważyłeś, że twój wektor znajduje się w innym miejscu niż wcześniej definiowane pojedyncze zmienne?
+
+## Możesz prosić komputer o podanie Ci którejś wartości z Twojego wektora:
+
+```{r}
+
+str(imiona)
+imiona[c(2)]
+
+imiona[c(1)]
+
+```
+
+## Zauważ, że wyrażenie "imiona[c(0)]" tworzy odpowiedź "numeric(0)". W przeciwieństwie do Pythona, R "liczy" wyrażenia zaczynając od 1 a nie od 0!!!
+
+
+## Jako że wektory mogą zawierać dane albo numeryczne albo słowne (numeric / char), warto czasami sprawdzić jak rozumiane są wyrażenia w konkretnym zbiorze. Do tego używamy funkcji "class()". Spróbuj sprawdzić jakie dane zawierają stworzone już przez Ciebie wektory i jak długie są te wektory (ile mają wartości w środku):
+
+```{r}
+
+class(imiona)
+
+class(wiek)
+
+
+length(imiona)
+
+```
+
+## Jeśli masz nowe dane do dodania do wektora/zmiennej, możesz je dodać nadpisując wartość obecnego zestawu.
+
+## Dodajmy do naszych wektorów Bartka i jego wiek na koniec listy, a Gosię i jej wiek na początek. Wykonaj działania i spójrz na zakładkę Environment. Czy dane zostały nadpisane prawidłowo?
+
+```{r}
+
+imiona <- c(imiona, "Bartek") 
+wiek <- c(wiek, 12) 
+
+imiona <- c("Gosia", imiona)
+wiek <- c(14, wiek)
+
+```
+
+## Poza matematyką możemy dodawać warunki i pytać komputer czy są one spełnione. Na przykład, możemy zapytać, czy w wektorze "wiek" mamy wyższe wartości niż 16 (czyli czy jest ktoś kto ma więcej niż 16 lat?).
+
+## Komputery "same z siebie" znają tylko 2 odpowiedzi - Tak i Nie, widzianych często jako system binarny (0-1) lub wyrażenia TRUE FALSE. Te ostatnie nazywane są Boolean values.
+
+```{r}
+
+wiek > 16
+
+```
+
+## Odpowiedzią będą same odpowiedzi FALSE, jako że żaden record z tego wektora nie pasuje do powyższego wyrażenia.
+
+## Możemy też poprosić o podanie nam jedynie tych elementów zbioru, które będą miały odpowiedź TRUE na nasze zapytanie. Tutaj prosimy o wyciągnięcie ze zbioru 'wiek' tylko tych danych które pasują do wyrażenia wiek < 12. Jako że mamy w tym zbiorze 2 wartości '10', dostaniemy spowrotem je jako wynik :
+```{r}
+
+wiek[wiek<12]
+
+```
+
+## Spróbujmy doprecyzować naszą prośbę - albo jedno wyrażenie albo drugie:
+
+```{r}
+
+wiek[wiek < 15 | wiek > 12]
+
+```
+
+## Powinieneś dostać spowrotem wszystkie recordy, bo wszystkie nasze dane są albo mniejsze od 15 albo większe niż 12. Spróbujmy więk zawężyć zakres i dodać znacznik "i"/"oraz", zamiast "albo". Zwróć uwagę na różnice między jednym wyrażeniem a drugim.
+
+```{r}
+
+wiek[wiek < 15 & wiek > 12]
+
+wiek[wiek <= 15 & wiek >= 12]
+
+```
+
+
+## Spróbuj wykonać krótkie zadanie dot pH.
+
+### Stwórz zmienną 'pH_num', która będzie zawierała kolejno wartości pH oraz 'pH_nazwy' zawierająca nazwy (kolejno!) odpowiadające wartościom pH:
+
+### woda morska = 8
+### mydło = 10
+### Ca(OH)2 = 12
+### kawa = 5
+### piwo = 4
+### wino = 4
+### soda oczyszczona = 9
+### krew = 8
+
+```{r}
+
+
+```
+
+# Sprawdź z użyciem funkcji czy wartości w utworzonych zbiorach są numeryczne czy słowne (char)
+
+```{r}
+
+
+```
+
+
+# Bez samodzielnego liczenia, a z funkcją, sprawdź jak wiele elementów zawierają Twoje zbiory.
+
+```{r}
+
+
+```
+
+
+# Dodatkowy pomiar dla kawałka skóry zostal wykonany (pH=6). Dodaj go na koniec obu zmiennych (w jednym pH w drugim co - skóra)
+
+```{r}
+
+
+```
+
+
+# Za pomocą wyrażenia "wyciągnij przed szereg" 3 pozycję z listy pH_nazwy:
+
+```{r}
+
+
+```
+
+
+# Napisz wyrażenie, które pomoże Ci wyciągnąć ze zbioru pH tylko te wartości, które są kwasowe.
+
+```{r}
+
+```
+
+
+# Czy zbiór posiada wartości pH > 11? Napisz odpowiednie wyrażenie, które zwróci CI wartość Boolean.
+
+```{r}
+
+
+```
+
+
+# Czy w naszym zestawie danych mamy element, który ma wartość pH równą 4? Sprawdź to wyrażeniem.
+
+```{r}
+
+
+```
+
